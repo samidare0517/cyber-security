@@ -14,11 +14,9 @@ namespace
 	constexpr float kAcc = 0.4f;
 
 	// ƒVƒ‡ƒbƒg‚Ì”­ŽËŠÔŠu
-	constexpr int kShotInterval = 10;
+	constexpr int kShotInterval = 25.0f;
 
 }
-
-
 
 Player::Player()
 {
@@ -72,12 +70,10 @@ void Player::update()
 	if (padState & PAD_INPUT_UP)
 	{
 		m_vec.y -= kAcc;
-	
 		if (m_vec.y < -kSpeedMax)
 		{
 			m_vec.y = -kSpeedMax;
 		}
-		
 	}
 	else if (padState & PAD_INPUT_DOWN)
 	{
@@ -118,14 +114,12 @@ void Player::update()
 	}
 	m_pos += m_vec;
 	
-	
 
 }
 
 // •`‰æ
 void Player::draw()
 {
-	 
 	DrawGraphF(m_pos.x, m_pos.y, m_handle, true);
 //	DrawCircle(static_cast<int>(getCenter().x), static_cast<int>(getCenter().y), static_cast<int>(getRadius()), GetColor(225, 225, 225), false);
 }

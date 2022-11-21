@@ -17,6 +17,7 @@ public:
 		m_hPlayerGraohic = -1;
 		m_hShotGraphic = -1;
 		m_hEnemyGraphc = -1;
+		m_hEnemySinGraphc = -1;
 		m_hBackGraphic = -1;
 		m_EnemyNum = 0;
 		
@@ -46,15 +47,18 @@ private:
 	int m_hPlayerGraohic;
 	int m_hShotGraphic;
 	int m_hEnemyGraphc;
+	int m_hEnemySinGraphc;
 	int m_hBackGraphic;
 
 
 
 	int m_EnemyNum;
+	int m_EnemySinNum;
 
 	bool m_isEnd;
 
 	Enemy m_enemy;
+	EnemySin m_enemysin;
 	Player m_player;
 
 	// ƒVƒ‡ƒbƒg

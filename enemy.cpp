@@ -6,22 +6,23 @@
 namespace
 {
 	// 当たり半径の半径
-	constexpr float kColRadius = 16.0f;
+	constexpr float kColRadius = 21.0f;
 
 	// キャラクターの移動速度
 	constexpr int kSpeedX = 8;
 	constexpr int kSpeedY = 8;
+	
+	// EnemySinが右移動しているかどうかのフラグをリセット 
+	bool enemyRightMove = true;
 }
 
 Enemy::Enemy()
 {
-	
-
 	sizeX = 0;
 	sizeY = 0;
 
 	// 画像データ
-	m_handle = 0;		// 画像のハンドル
+	m_handle = -1;		// 画像のハンドル
 
 	// 位置
 	m_pos;
@@ -82,7 +83,7 @@ void Enemy::draw()
 {
 	if (m_isDead) return;
 	DrawGraphF(m_pos.x, m_pos.y, m_handle, true);
-//	DrawCircle(static_cast<int>(getCenter().x), static_cast<int>(getCenter().y), static_cast<int>(getRadius()), GetColor(225, 225, 225), false);
+	DrawCircle(static_cast<int>(getCenter().x), static_cast<int>(getCenter().y), static_cast<int>(getRadius()), GetColor(225, 225, 225), false);
 }
 
 // 当たり判定の半径取得
@@ -120,4 +121,80 @@ void Enemy::bound(Vec2 targetPos)
 
 	// 反対方向に現在の速度で移動するようにする
 	m_vec = boundDir.normalize() * speed;
+}
+
+
+
+
+EnemySin::EnemySin()
+{
+
+}
+
+void EnemySin::init()
+{
+	m_vec.x = 1.0f;
+	m_vec.y = 0.0f;
+}
+
+void EnemySin::setPos(float x, float y)
+{
+	Enemy::setPos(x, y);
+	m_basePos = m_pos;
+
+}
+
+void EnemySin::update()
+{
+	m_basePos += m_vec;
+	m_sinRate += 0.05f;
+
+	m_pos = m_basePos;
+	m_pos.y += sinf(m_sinRate) * 128.0f;
+	
+	// 画面外に出そうになったら戻して画像を反転させる
+	//if (m_pos.x > 1280)
+	//{
+	//	m_pos.x = 1280;
+	//	enemyRightMove = false;
+	//}
+	//else if (m_pos.x < 0)
+	//{
+	//	m_pos.x = 0;
+	//	enemyRightMove = true;
+	//}
+
+}
+
+void EnemySin::draw()
+{
+	if (m_isDead) return;
+	DrawGraphF(m_pos.x, m_pos.y, m_handle, true);
+	DrawCircle(static_cast<int>(getCenter().x), static_cast<int>(getCenter().y), static_cast<int>(getRadius()), GetColor(225, 225, 225), false);
+}
+
+
+// 当たり判定の半径取得
+float EnemySin::getRadius()const
+{
+	return kColRadius;
+}
+
+// 当たり判定の中心位置取得
+Vec2 EnemySin::getCenter()const
+{
+	int sizeX = 0;
+	int sizeY = 0;
+
+	if (GetGraphSize(m_handle, &sizeX, &sizeY) == -1)
+	{
+		// サイズが取得できなかった場合は左位置を渡しておく
+		return m_pos;
+	}
+
+	Vec2 result = m_pos;
+	result.x += sizeX / 2;
+	result.y += sizeY / 2;
+
+	return result;
 }

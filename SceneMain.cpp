@@ -9,13 +9,17 @@
 namespace
 {
 	Enemy enemy[7];
+	EnemySin enemysin[5];
 
 	bool kCheck;
 
 	int EnemyNum = 7;
+	int EnemySinNum = 5;
 
 	// ショットの発射間隔
 	constexpr int kShotInterval = 16;
+
+	
 }
 
 void SceneMain::init()
@@ -31,18 +35,28 @@ void SceneMain::init()
 	m_hPlayerGraohic = LoadGraph("data/player.png");
 	m_hShotGraphic = LoadGraph("data/shot.png");
 	m_hEnemyGraphc = LoadGraph("data/enemy.png");
+	m_hEnemySinGraphc = LoadGraph("data/enemy2.png");
 	m_hBackGraphic = LoadGraph("data/Back.png");
 	
 	m_player.setHandle(m_hPlayerGraohic);
 	m_player.init();
 
-	float posX = 80.0f;
+	float posX = 400.0f;
 	for (auto& m_enemy : enemy)
 	{
 		m_enemy.setHandle(m_hEnemyGraphc);
 		m_enemy.init();
 		m_enemy.setPos(posX, 160.0f);
 		posX += 80.0f;
+	}
+
+	float posx = 300.0f;
+	for (auto& m_enemysin : enemysin)
+	{
+		m_enemysin.setHandle(m_hEnemySinGraphc);
+		m_enemysin.init();
+		m_enemysin.setPos(posx, 300.0f);
+		posx += 100.0f;
 	}
 
 	m_player.setMain(this);
@@ -56,6 +70,7 @@ void SceneMain::end()
 	DeleteGraph(m_hPlayerGraohic);
 	DeleteGraph(m_hShotGraphic);
 	DeleteGraph(m_hEnemyGraphc);
+	DeleteGraph(m_hEnemySinGraphc);
 	DeleteGraph(m_hBackGraphic);
 
 	for (auto& pShot : m_pShotVt)
@@ -74,6 +89,11 @@ void SceneMain::update()
 	for (auto& m_enemy : enemy)
 	{
 		m_enemy.update();
+	}
+	for (auto& m_enemysin : enemysin)
+	{
+		m_enemysin.update();
+
 	}
 
 	std::vector<ShotBase*>::iterator it = m_pShotVt.begin();
@@ -104,9 +124,6 @@ void SceneMain::update()
 		// Playerのflag (false = 生存)
 		bool isEnd = false;
 		// enemyが死んでいたら死んだenemy表示しない
-		
-
-
 		if (enemy[i].isDead())continue;		
 		
 		Vec2  dist = m_player.getCenter() - enemy[i].getCenter();
@@ -114,18 +131,37 @@ void SceneMain::update()
 		if (dist.length() < radiusAdd)
 		{
 			// 当たった場合の処理
-		//	DrawFormatString(400, 0, GetColor(255, 0, 0), "ぶつかってしまった!");
+			DrawFormatString(400, 0, GetColor(255, 0, 0), "ぶつかってしまった!");
 			
 			// Playerが敵と接触した時点でゲームを終了する
-			isEnd = true;
-			DxLib_End();
+		//	isEnd = true;
+		//	DxLib_End();
 
 		}
 	}
-//	DrawCircle(static_cast<int>(m_player.getCenter().x), static_cast<int>(m_player.getCenter().y), static_cast<int>(m_player.getRadius()), GetColor(225, 225, 0), false);
-	
-	
 
+	// enemysinとplayerの当たり判定
+	for (int i = 0; i < EnemySinNum; i++)
+	{
+		// player生存フラグ
+		bool isEnd = false;
+
+		// enemysinが死んでいたら死んだenemysinは表示しない
+		if (enemysin[i].isDead())continue;
+
+		Vec2 dist = m_player.getCenter() - enemysin[i].getCenter();
+		float radiusAdd = enemysin[i].getRadius() + m_player.getRadius();
+		if(dist.length() < radiusAdd)
+		{
+			// デバック用：当たった場合の処理
+			DrawFormatString(800, 0, GetColor(225, 255, 0), "ぶつかってしまった。");
+
+			// Playerが敵と接触した時点でゲームを終了する
+		//	isEnd = true;
+		//	DxLib_End();
+		}
+	}
+	
 	while (it != m_pShotVt.end())
 	{
 
@@ -147,7 +183,6 @@ void SceneMain::update()
 			{
 			//	DrawFormatString(200, 0, GetColor(225, 0, 0), "ヒット！");
 				kCheck = true;
-			
 			}
 			else
 			{
@@ -159,7 +194,31 @@ void SceneMain::update()
 				m_EnemyNum--;
 			}
 		}
-	//	DrawCircle(static_cast<int>((*pShot).getCenter().x), static_cast<int>((*pShot).getCenter().y), static_cast<int>((*pShot).getRadius()), GetColor(225, 225, 225), false);
+	
+		// enemysinと玉の当たり判定
+		for (int i = 0; i < EnemySinNum; i++)
+		{
+			if (enemysin[i].isDead())continue;
+
+			Vec2 dist = (*pShot).getCenter() - enemysin[i].getCenter();
+			float radiusAdd = enemysin[i].getRadius() + (*pShot).getRadius();
+			if (dist.length() < radiusAdd)
+			{
+				DrawFormatString(800, 100, GetColor(225, 225, 0), "ヒット");
+				kCheck = true;
+			}
+			else
+			{
+				kCheck = false;
+			}
+			if (isCol() == true)
+			{
+				enemysin[i].setDead();
+				m_EnemySinNum--;
+			}
+
+		}
+
 
 		if (!pShot->isExist())
 		{
@@ -195,14 +254,17 @@ void SceneMain::update()
 
 void SceneMain::draw()
 {
-	DrawGraph(0, 0, m_hBackGraphic, false);
+//	DrawGraph(0, 0, m_hBackGraphic, false);
 	m_player.draw();
 
 	for (auto& m_enemy : enemy)
 	{
 		m_enemy.draw();
 	}
-
+	for (auto& m_enemysin : enemysin)
+	{
+		m_enemysin.draw();
+	}
 
 	for (auto& pShot : m_pShotVt)
 	{

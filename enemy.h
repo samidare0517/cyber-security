@@ -15,7 +15,7 @@ public:
 	void setPos(float x, float y);
 	void setMain(SceneMain* pMain) { m_pMain = pMain; }
 	void update();
-	void draw();
+	virtual void draw();
 	void setDead() { m_isDead = true; }
 	
 
@@ -33,7 +33,7 @@ public:
 	bool isDead()const{return m_isDead;}
 
 
-private:
+protected:
 
 	int m_handle;	// 画像のハンドル
 	int sizeX;
@@ -53,4 +53,26 @@ private:
 
 	bool m_isDead;
 
+};
+
+class EnemySin :public Enemy
+{
+public:
+	EnemySin();
+	virtual ~EnemySin(){}
+
+	virtual void init();
+	virtual void setPos(float x, float y);
+	virtual void update();
+	virtual void draw();
+	
+	// 当たり判定の半径取得
+	virtual float getRadius() const;
+
+	// 当たり判定の中心位置取得
+	virtual Vec2 getCenter() const;
+private:
+
+	Vec2 m_basePos;
+	float m_sinRate;
 };
