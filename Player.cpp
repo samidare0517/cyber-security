@@ -5,29 +5,26 @@
 
 namespace
 {
-
 	// 当たり半径の半径
 	constexpr float kColRadius = 20.0f;
 
 	// X方向、Y方向の最大速度
 	constexpr float kSpeedMax = 8.0f;
-	constexpr float kAcc = 0.4f;
+	constexpr float kAcc	  = 0.4f;
 
 	// ショットの発射間隔
-	constexpr int kShotInterval = 25.0f;
-
+	constexpr int kShotInterval = 20.0f;
 }
 
 Player::Player()
 {
-	m_handle = -1;
-	m_pMain = nullptr;
+	m_handle	   = -1;
+	m_pMain		   = nullptr;
 	m_shotInterval = 0;
 }
 
 Player::~Player()
 {
-
 
 }
 
@@ -38,6 +35,7 @@ void Player::init()
 	m_pos.y = 100.0f;
 	m_vec.x = 0.0f;
 	m_vec.y = 0.0f;
+
 	m_shotInterval = 0;
 }
 
@@ -114,12 +112,29 @@ void Player::update()
 	}
 	m_pos += m_vec;
 	
-
+	// playerが外に出そうになったら画面内に戻す
+	if (m_pos.x < 0)
+	{
+		m_pos.x = 0;
+	}
+	if (m_pos.x > Game::kScreenWindth -118)
+	{
+		m_pos.x = Game::kScreenWindth -118;
+	}
+	if (m_pos.y < 0)
+	{
+		m_pos.y = 0;
+	}
+	if (m_pos.y > Game::kScreenHeight -118)
+	{
+		m_pos.y = Game::kScreenHeight -118;
+	}
 }
 
 // 描画
 void Player::draw()
 {
+	if (m_isDead) return;
 	DrawGraphF(m_pos.x, m_pos.y, m_handle, true);
 //	DrawCircle(static_cast<int>(getCenter().x), static_cast<int>(getCenter().y), static_cast<int>(getRadius()), GetColor(225, 225, 225), false);
 }

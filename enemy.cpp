@@ -83,7 +83,7 @@ void Enemy::draw()
 {
 	if (m_isDead) return;
 	DrawGraphF(m_pos.x, m_pos.y, m_handle, true);
-	DrawCircle(static_cast<int>(getCenter().x), static_cast<int>(getCenter().y), static_cast<int>(getRadius()), GetColor(225, 225, 225), false);
+//	DrawCircle(static_cast<int>(getCenter().x), static_cast<int>(getCenter().y), static_cast<int>(getRadius()), GetColor(225, 225, 225), false);
 }
 
 // 当たり判定の半径取得
@@ -124,8 +124,7 @@ void Enemy::bound(Vec2 targetPos)
 }
 
 
-
-
+// EnemySinの処理
 EnemySin::EnemySin()
 {
 
@@ -151,26 +150,19 @@ void EnemySin::update()
 
 	m_pos = m_basePos;
 	m_pos.y += sinf(m_sinRate) * 128.0f;
-	
-	// 画面外に出そうになったら戻して画像を反転させる
-	//if (m_pos.x > 1280)
-	//{
-	//	m_pos.x = 1280;
-	//	enemyRightMove = false;
-	//}
-	//else if (m_pos.x < 0)
-	//{
-	//	m_pos.x = 0;
-	//	enemyRightMove = true;
-	//}
 
+	// 画面外に出そうになったら左端からリピートさせる
+	if (m_basePos.x > Game::kScreenWindth)
+	{
+		m_basePos.x = 0;
+	}
 }
 
 void EnemySin::draw()
 {
 	if (m_isDead) return;
 	DrawGraphF(m_pos.x, m_pos.y, m_handle, true);
-	DrawCircle(static_cast<int>(getCenter().x), static_cast<int>(getCenter().y), static_cast<int>(getRadius()), GetColor(225, 225, 225), false);
+//	DrawCircle(static_cast<int>(getCenter().x), static_cast<int>(getCenter().y), static_cast<int>(getRadius()), GetColor(225, 225, 225), false);
 }
 
 
@@ -182,6 +174,68 @@ float EnemySin::getRadius()const
 
 // 当たり判定の中心位置取得
 Vec2 EnemySin::getCenter()const
+{
+	int sizeX = 0;
+	int sizeY = 0;
+
+	if (GetGraphSize(m_handle, &sizeX, &sizeY) == -1)
+	{
+		// サイズが取得できなかった場合は左位置を渡しておく
+		return m_pos;
+	}
+
+	Vec2 result = m_pos;
+	result.x += sizeX / 2;
+	result.y += sizeY / 2;
+
+	return result;
+}
+
+
+EnemyDeside::EnemyDeside()
+{
+
+}
+
+void EnemyDeside::init()
+{
+	m_vec.x = -3.0f;
+	m_vec.y = 0.0f;
+}
+
+void EnemyDeside::setPos(float x, float y)
+{
+	Enemy::setPos(x, y);
+	m_basePos = m_pos;
+}
+
+void EnemyDeside::update()
+{
+	m_basePos += m_vec;
+	m_pos = m_basePos;
+
+	if (0 > m_basePos.x)
+	{
+		m_basePos.x = Game::kScreenWindth;
+	}
+}
+
+void EnemyDeside::draw()
+{
+	if (m_isDead) return;
+	DrawGraphF(m_pos.x, m_pos.y, m_handle, true);
+//	DrawCircle(static_cast<int>(getCenter().x), static_cast<int>(getCenter().y), static_cast<int>(getRadius()), GetColor(225, 225, 225), false);	
+}
+
+
+// 当たり判定の半径取得
+float EnemyDeside::getRadius()const
+{
+	return kColRadius;
+}
+
+// 当たり判定の中心位置取得
+Vec2 EnemyDeside::getCenter()const
 {
 	int sizeX = 0;
 	int sizeY = 0;

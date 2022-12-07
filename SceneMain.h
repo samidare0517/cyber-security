@@ -18,6 +18,7 @@ public:
 		m_hShotGraphic = -1;
 		m_hEnemyGraphc = -1;
 		m_hEnemySinGraphc = -1;
+		m_hEnemyDesideGraphc = -1;
 		m_hBackGraphic = -1;
 		m_EnemyNum = 0;
 		
@@ -31,12 +32,17 @@ public:
 	virtual void update();
 	virtual void draw();
 
+	virtual bool Migration();
+
 	// 弾の生成
 	virtual bool createShotNormal(Vec2 pos);
 
+	// チェック類
 	virtual bool isEnd() { return m_isEnd; }
 
-	virtual bool isCol();
+	virtual bool isCol(); 
+
+	virtual bool isPlayerCol();
 
 private:
 	// テキスト表示位置変更
@@ -48,17 +54,18 @@ private:
 	int m_hShotGraphic;
 	int m_hEnemyGraphc;
 	int m_hEnemySinGraphc;
+	int m_hEnemyDesideGraphc;
 	int m_hBackGraphic;
-
-
 
 	int m_EnemyNum;
 	int m_EnemySinNum;
-
+	int m_EnemyDesideNum;
 	bool m_isEnd;
+	
 
 	Enemy m_enemy;
 	EnemySin m_enemysin;
+	EnemyDeside m_enemydeside;
 	Player m_player;
 
 	// ショット

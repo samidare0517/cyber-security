@@ -21,6 +21,9 @@ public:
 	virtual void draw();
 
 	virtual bool isEnd() { return m_isEnd; }
+
+	void Fade();
+
 private:
 	// テキスト表示位置変更
 	int m_textPosY;
@@ -30,4 +33,6 @@ private:
 
 	bool m_isEnd;
 	
+	int fadeValue_ = 255;		// 黒矩形とのブレンド具合
+
 };

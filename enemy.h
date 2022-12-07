@@ -76,3 +76,27 @@ private:
 	Vec2 m_basePos;
 	float m_sinRate;
 };
+
+
+class EnemyDeside: public Enemy
+{
+public:
+	EnemyDeside();
+	virtual ~EnemyDeside(){}
+
+	virtual void init();
+	virtual void setPos(float x, float y);
+	virtual void update();
+	virtual void draw();
+
+	// “–‚½‚è”»’è‚Ì”¼Œaæ“¾
+	virtual float getRadius() const;
+
+	// “–‚½‚è”»’è‚Ì’†SˆÊ’uæ“¾
+	virtual Vec2 getCenter() const;
+
+private:
+//	bool DirectionFlag = false;
+	Vec2 m_basePos;
+
+};

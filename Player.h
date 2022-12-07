@@ -24,8 +24,9 @@ public:
 
 	// •`‰æ
 	void draw();
-
 	
+	void setDead() { m_isDead = true; }
+	bool isDead()const { return m_isDead; }
 
 	// î•ñ‚Ìæ“¾
 	Vec2 getPos() const { return m_pos; }
@@ -54,6 +55,5 @@ private:
 	// ƒVƒ‡ƒbƒg‚Ì”­ËŠÔŠu
 	int m_shotInterval;
 
-	
-
+	bool m_isDead;
 };

@@ -14,6 +14,7 @@ public:
 		kSceneKindTitle,
 		kSceneKindMain,
 		kSceneKindResult,
+	
 
 		kSceneKindNum
 	}SceneKind;

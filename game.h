@@ -10,7 +10,7 @@ namespace Game
 
 	// ウインドウサイズ
 	constexpr int kScreenWindth = 1280;
-	constexpr int kScreenHeight = 720;
+	constexpr int kScreenHeight = 700;
 
 	// カラーモード
 	constexpr int kColorDepth = 32;		// 36 or 16
